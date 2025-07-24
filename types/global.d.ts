@@ -1,7 +1,7 @@
 export { };
 
 declare global {
-    type listHeader = {
+    type IListHeader = {
         id: string
         title: string
     }

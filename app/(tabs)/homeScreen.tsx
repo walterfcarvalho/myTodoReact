@@ -10,7 +10,7 @@ import ListHeader from '../components/listHeader/listHeader';
 
 
 const HomeScreen = () => {
-  const [list, setList] = useState<listHeader[] | undefined>(undefined);
+  const [list, setList] = useState<IListHeader[] | undefined>(undefined);
 
   useEffect(() => {
     firebase.list ()

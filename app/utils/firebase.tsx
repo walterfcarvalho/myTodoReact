@@ -34,7 +34,7 @@ export const list = async (userId: string = "kPx2IKUaqXS4xHG0wShQSRhrUAD3") => {
     )
   )
 
-  const data: listHeader[] = [];
+  const data: IListHeader[] = [];
 
   snapShot.forEach(doc => {
     data.push({

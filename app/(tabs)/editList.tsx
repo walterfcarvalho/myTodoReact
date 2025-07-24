@@ -126,7 +126,7 @@ const EditList = () => {
   >
     <AppHeader
       title={myList.title}
-      action={() => router.navigate('/')}
+      action={() => router.navigate('/login')}
     />
 
 

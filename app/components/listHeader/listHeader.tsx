@@ -2,10 +2,11 @@ import { faChevronRight as icon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
+import MenuContext from '../menuContext/menuContext';
 
 
 type Tprops = {
-  list: listHeader[] | undefined
+  list: IListHeader[] | undefined
 }
 
 const ListHeader = ({ list }: Tprops) => {
@@ -24,10 +25,16 @@ const ListHeader = ({ list }: Tprops) => {
       className="shadow-lg"
     >
       <View className="p-2" focusable={false}>
-        {list?.map((l: listHeader, i: number) => <Text
+        {list?.map((l: IListHeader, i: number) => <Text
           className="flex justify-between bg-gray-200 px-3 py-3 text-sm font-semibold text-gray-700 mx-2 my-2"
           key={i}
         >
+          {/* <MenuContext
+            item={l}
+            itemUpd={()=>{}}
+            itemDel={()=>{}}
+          /> */}
+
           {l.title}
 
           <TouchableOpacity
