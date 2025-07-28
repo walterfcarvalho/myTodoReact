@@ -2,21 +2,23 @@ export { };
 
 declare global {
     type IListHeader = {
-        id: string
-        title: string
+        uuid: string;
+        id: number;
+        title: string;
     }
 
     interface IListItem {
-        id:number
-        name:string
+        id: number
+        name: string
         check: boolean
     }
 
     type IList = {
+        uuid: string;
         owner?: string
-        id: string
         title: string
-        guests:string[]
+        guests: string[]
         items: IListItem[]
     }
+
 }

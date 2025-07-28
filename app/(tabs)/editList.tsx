@@ -9,69 +9,26 @@ import AppHeader from '../components/appHeader/appHeader';
 import ListItems from '../components/listItems/listItems';
 import alert from '../utils/Alert';
 import AddButton from '../components/addButtom/addButton';
-import { addDoc } from 'firebase/firestore';
+import { emptyList } from '@/types/consts';
 
-const emptyList: IList = {
-  id: "",
-  owner: "",
-  title: 'Mock list',
-  guests: [],
-  items: [
-    // { name: "macarrão", check: true, id: 10 },
-    // { name: "peixe", check: true, id: 13 },
-    // { name: "leite", check: false, id: 17 },
-    // { name: "sal", check: false, id: 20 },
-    // { name: "macarrão", check: true, id: 10 },
-    // { name: "peixe", check: true, id: 13 },
-    // { name: "leite", check: false, id: 17 },
-    // { name: "sal", check: false, id: 20 },
-    // { name: "macarrão", check: true, id: 10 },
-    // { name: "peixe", check: true, id: 13 },
-    // { name: "leite", check: false, id: 17 },
-    // { name: "sal", check: false, id: 20 },
-    // { name: "macarrão", check: true, id: 10 },
-    // { name: "peixe", check: true, id: 13 },
-    // { name: "leite", check: false, id: 17 },
-    // { name: "sal", check: false, id: 20 },
-    // { name: "macarrão", check: true, id: 10 },
-    // { name: "peixe", check: true, id: 13 },
-    // { name: "leite", check: false, id: 17 },
-    // { name: "sal", check: false, id: 20 },
-    // { name: "macarrão", check: true, id: 10 },
-    // { name: "peixe", check: true, id: 13 },
-    // { name: "leite", check: false, id: 17 },
-    // { name: "sal", check: false, id: 20 },
-    // { name: "azeite", check: true, id: 21 },
-    // { name: "mostarda", check: false, id: 33 },
-  ]
-}
 
 const EditList = () => {
   const { id } = useLocalSearchParams();
-  const [myList, setMyList] = useState<IList>(emptyList)
+  const [myList, setMyList] = useState<IList>({...emptyList})
 
   useEffect(() => {
     if (typeof id === 'string')
-      firebase.listObserve(id, (x) => setMyList(x))
+      firebase.listItemsObserve(id, (x) => setMyList(x))
   }, [id])
 
   useEffect(() => {
-    if (!myList.id)
+    if (!myList.uuid)
       return
 
     firebase.listUpdate(myList)
       .then(res => console.log('update list'))
       .catch(err => console.log(`Error ${err}`))
   }, [myList])
-
-
-  const sendToFireBase = () => {
-    // console.log("send to Firebase");
-    // firebase.listUpdate(myList)
-    //   .then(res => console.log('update list'))
-    //   .catch(err => console.log(`Error ${err}`))
-  }
-
 
   const itemAdd = () => {
 
@@ -91,9 +48,35 @@ const EditList = () => {
 
     setMyList((prev) => {
       return { ...prev, items: items }
-    } );
+    });
+  }
 
-    sendToFireBase();
+  const itemToogleCheck = (itemId: number) => {
+    const item = myList.items.filter(i => i.id === itemId)[0];
+
+    if (!item)
+      return
+
+    item.check = !item.check
+
+    itemUpd(item);
+  }
+
+  const itemChangeName = (itemId: number) => {
+
+    let newItem = myList.items.filter(i => i.id === itemId)[0];
+
+    if (!newItem)
+      return
+
+    const newName = prompt("New description", newItem.name || newItem.name)
+
+    if (!newName)
+      return
+
+    newItem.name = newName;
+
+    itemUpd(newItem);
   }
 
   const itemUpd = (item: IListItem) => {
@@ -103,30 +86,26 @@ const EditList = () => {
         ...old, items: old.items.map(i => i.id === item.id ? item : i)
       }
     })
-
-    sendToFireBase();
   };
 
-  const itemDel = (item: IListItem) => {
+  const itemDel = (itemId: number) => {
 
-    if (!alert(`Remove this Item`, `${item.name} ?`))
+    if (!alert(`Remove this Item`, `${myList.items[itemId].name} ?`))
       return
 
     setMyList((old) => {
       return {
-        ...old, items: old.items.filter(i => i.id !== item.id)
+        ...old, items: old.items.filter(i => i.id !== itemId)
       }
     });
-    sendToFireBase()
   }
-
 
   return <SafeAreaProvider
     className={`static`}
   >
     <AppHeader
       title={myList.title}
-      action={() => router.navigate('/login')}
+      action={() => router.navigate('/homeScreen')}
     />
 
 
@@ -135,21 +114,26 @@ const EditList = () => {
       <ScrollView
         style={{}}
       >
-        <ListItems
-          key={1}
-          label={'To do'}
-          itemUpd={itemUpd}
-          itemDel={itemDel}
-          items={myList.items.sort((x, y) => x.name > y.name ? 1 : -1).filter(item => item.check === false)}
-        />
-
-        <ListItems
-          key={2}
-          label={'Done'}
-          itemUpd={itemUpd}
-          itemDel={itemDel}
-          items={myList.items.sort((x, y) => x.name > y.name ? 1 : -1).filter(item => item.check === true)}
-        />
+        {myList.items &&
+          <ListItems
+            key={1}
+            label={'To do'}
+            itemToogleCheck={itemToogleCheck}
+            itemChangeName={itemChangeName}
+            itemDel={itemDel}
+            items={myList.items?.sort((x, y) => x.name > y.name ? 1 : -1).filter(item => item.check === false)}
+          />
+        }
+        {myList.items &&
+          <ListItems
+            key={2}
+            label={'Done'}
+            itemToogleCheck={itemToogleCheck}
+            itemChangeName={itemChangeName}
+            itemDel={itemDel}
+            items={myList.items?.sort((x, y) => x.name > y.name ? 1 : -1).filter(item => item.check === true)}
+          />
+        }
       </ScrollView>
 
       <AddButton

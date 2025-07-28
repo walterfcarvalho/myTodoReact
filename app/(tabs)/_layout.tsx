@@ -3,6 +3,7 @@ import { Redirect, Tabs } from 'expo-router';
 import { Platform, Text } from 'react-native';
 import { useAuthSession } from '../provider/authProvider';
 import * as myCookie from '@/app/utils/cookies';
+import { setParams } from 'expo-router/build/global-state/routing';
 
 
 export default function TabLayout() {
@@ -38,7 +39,8 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           title: '',
-        }}
+        }
+      }
       />
       <Tabs.Screen
         name="editList"

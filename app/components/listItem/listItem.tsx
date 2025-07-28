@@ -5,19 +5,20 @@ import Checkbox from "expo-checkbox";
 import { useState } from "react";
 
 type TProps = {
-  itemUpd: (idItem: IListItem) => void
-  itemDel: (idItem: IListItem) => void
+  itemToogleCheck: (itemId:number) => void
+  itemChangeName: (itemId:number) => void
+  itemDel: (itemId:number) => void
   item: IListItem
 }
 
-const ListItem = ({ item, itemUpd, itemDel }: TProps) => {
+const ListItem = ({ item, itemChangeName, itemToogleCheck, itemDel }: TProps) => {
   
   return <View
-    className='static flex flex-row content-center items-center'
+    className='flex flex-row content-center items-center'
   >
     <MenuContext
       item={item}
-      itemUpd={itemUpd}
+      itemChangeName={itemChangeName}
       itemDel={itemDel}
     />
 
@@ -26,7 +27,7 @@ const ListItem = ({ item, itemUpd, itemDel }: TProps) => {
     >
       {item.name}
       <Checkbox
-        onValueChange={() => itemUpd({ ...item, check: !item.check })}
+        onValueChange={() => itemToogleCheck(item.id)}
         value={item.check}
       />
     </Text>
@@ -34,11 +35,7 @@ const ListItem = ({ item, itemUpd, itemDel }: TProps) => {
       className='border-teal-500 mx-1'
     />
 
-
   </View>
-
-
-
 }
 
 export default ListItem

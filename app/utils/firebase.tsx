@@ -1,11 +1,14 @@
+import { emptyList } from '@/types/consts';
 import { initializeApp } from 'firebase/app';
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDocs,
   getFirestore,
   onSnapshot,
+  or,
   orderBy,
   query,
   setDoc,
@@ -21,35 +24,49 @@ const firebaseConfig = {
   appId: "1:975403012912:web:f382b3f6a08dbc9301eef5",
   measurementId: "G-D6D4Q3PM6Q"
 };
+//kPx2IKUaqXS4xHG0wShQSRhrUAD3
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export const list = async (userId: string = "kPx2IKUaqXS4xHG0wShQSRhrUAD3") => {
+export const getLists = async (userId: string) => {
   const snapShot = await getDocs(
     query(
       collection(db, "lists"),
-      where("owner", "==", userId),
+        or(
+          where("owner", "==", userId),
+          where("guests", "array-contains", userId ),
+        ),
       orderBy('title', 'asc')
     )
   )
 
   const data: IListHeader[] = [];
 
-  snapShot.forEach(doc => {
+  snapShot.forEach( (doc) => {
     data.push({
-      id: doc.id,
+      id: data.length,
+      uuid: doc.id,
       title: doc.data()["title"]
     });
   })
   return data;
 }
 
-export const listAdd = async( list:IList) => {
+export const listAdd = async(listHead:IListHeader, owner:string) => {
+  const list:IList = {
+    ...emptyList,
+    ...listHead,
+    owner: owner
+  }
   return await addDoc(collection(db, "lists"), list);
 }
 
-export  const listObserve = (listId: string, myCallback: React.Dispatch<React.SetStateAction<IList>>) => {
+export const listDel = async (uuid:string) => {
+  return deleteDoc(doc(db, "lists", uuid));
+}
+
+export const listItemsObserve = (listId: string, myCallback: React.Dispatch<React.SetStateAction<IList>>) => {
 
   return onSnapshot(
     doc(db, "lists", listId),
@@ -57,15 +74,14 @@ export  const listObserve = (listId: string, myCallback: React.Dispatch<React.Se
     (doc) => {
       console.log('object on firebase >> ');
       console.log(doc.data());
-      myCallback({...doc.data(), id: doc.id} as IList)
+      myCallback({...doc.data(), uuid: doc.id} as IList)
     }
   );
-
 }
 
 export const listUpdate = (list:IList) => {
   return setDoc(
-    doc(db, "lists", list.id), 
+    doc(db, "lists", list.uuid), 
     {...list} 
   )
 }

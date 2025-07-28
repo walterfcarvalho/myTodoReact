@@ -6,8 +6,9 @@ import ListItem from '../listItem/listItem';
 
 
 interface Tprops {
-  itemUpd: (idItem: IListItem) => void
-  itemDel: (idItem: IListItem) => void
+  itemToogleCheck: (itemId:number) => void
+  itemChangeName: (itemId:number) => void
+  itemDel: (itemId:number) => void
   items: IListItem[];
   label: string;
 }
@@ -15,7 +16,7 @@ interface Tprops {
 //const windowDimensions = Dimensions.get('window');
 //const height:number = windowDimensions.height / 2;
 
-const ListItems = ({ itemUpd, itemDel, items, label }: Tprops) => {
+const ListItems = ({ itemToogleCheck, itemChangeName, itemDel, items, label }: Tprops) => {
 
   return <View
   >
@@ -28,8 +29,6 @@ const ListItems = ({ itemUpd, itemDel, items, label }: Tprops) => {
       >
 
         <Text
-          key={'xxx'}
-
           className={`font`}
         >{` ${label}: ${items.length}`}</Text>
 
@@ -37,9 +36,10 @@ const ListItems = ({ itemUpd, itemDel, items, label }: Tprops) => {
           key={`b`}
         >
           {
-            items.map((item, i) => <ListItem 
-              key={i}
-              itemUpd={itemUpd} 
+            items.map( item => <ListItem 
+              key={item.id}
+              itemChangeName={itemChangeName}
+              itemToogleCheck={itemToogleCheck} 
               itemDel={itemDel}
               item={item}
             />)
