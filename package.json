@@ -1,5 +1,6 @@
 {
   "name": "mytodoreactnative",
+  "homepage": "https://yourusername.github.io/mytodoreactnative",
   "mainOld": "expo-router/entry",
   "main": "expo-router/entry",
   "version": "1.0.0",
@@ -49,6 +50,7 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~9.2.0",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "tailwindcss": "^3.4.17",
@@ -56,6 +58,8 @@
   },
   "private": true,
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "expo start --port 3000",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
