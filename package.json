@@ -60,10 +60,8 @@
   },
   "private": true,
   "scripts": {
-    "build": "expo export --platform web ./docs",
+    "buildWeb": "expo export --platform web",
     "start": "expo start --port 3000",
-    "deploy": "gh-pages --nojekyll -d dist",
-    "predeploy": "expo export -p web",
     "web": "expo start --web",
     "lint": "expo lint"
   }
