@@ -26,8 +26,8 @@ const firebaseConfig = {
 };
 //kPx2IKUaqXS4xHG0wShQSRhrUAD3
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+export const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
 
 export const getLists = async (userId: string) => {
   const snapShot = await getDocs(
@@ -85,7 +85,5 @@ export const listUpdate = (list:IList) => {
     {...list} 
   )
 }
-
-
 
 export default {}

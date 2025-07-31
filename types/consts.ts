@@ -1,8 +1,9 @@
 export const emptyList = {
-    uuid:"",
+    uuid: "",
     id: "",
     owner: "",
     title: 'Mock list',
     guests: [],
     items: []
 }
+

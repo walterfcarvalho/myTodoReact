@@ -7,13 +7,7 @@ import { setParams } from 'expo-router/build/global-state/routing';
 
 
 export default function TabLayout() {
-  const { token, isLoading } = useAuthSession()
-
-  console.log('passou');
-
-  const uuid = myCookie.get('uuid');  
-
-  console.log(`token ${uuid}`)
+  const { token } = useAuthSession()
 
   if (!token?.current) {
     return <Redirect href={`/login`} />;
@@ -44,9 +38,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="editList"
-        options={{
-          title: 'Explore',
-        }}
+        options={{title: 'Explore'}}
       />
     </Tabs>
   );

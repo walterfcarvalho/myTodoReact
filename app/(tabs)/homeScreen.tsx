@@ -15,14 +15,11 @@ const HomeScreen = () => {
   const [list, setList] = useState<IListHeader[] | undefined>(undefined);
 
   useEffect(() => {
-    console.log(`Homescreen ${token}`);
     if (typeof token === 'string')
       firebase.getLists(token)
         .then(data => setList(data))
         .catch(err => console.log(err))
   }, [token])
-
-
 
   const listChangeName = (itemId: number) => {
     let newItem = list?.filter(i => i.id === itemId)[0];

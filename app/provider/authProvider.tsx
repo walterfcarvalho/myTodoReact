@@ -4,7 +4,7 @@ import {createContext, ReactNode, RefObject, useCallback, useContext, useEffect,
 import cookies, * as myCookies from '@/app/utils/cookies';
 
 const AuthContext = createContext<{
-  signIn: (arg0: string) => void;
+  signIn: (userData: TFirebaseUser) => void;
   signOut: () => void
   token: RefObject<string | null> | null;
   isLoading: boolean
@@ -32,9 +32,9 @@ export default function AuthProvider  ({children}:{children: ReactNode}): ReactN
     })()
   }, []);
 
-  const signIn = useCallback(async (token: string) => {
-    myCookies.set("uuid", token);
-    tokenRef.current = token;
+  const signIn = useCallback(async (userData: TFirebaseUser) => {
+    myCookies.set("uuid", userData.uid);
+    tokenRef.current = userData.uid;
     router.replace(`/(tabs)/homeScreen`);
 }, []);
 

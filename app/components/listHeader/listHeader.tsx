@@ -3,14 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { router } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 import MenuContext from '../menuContext/menuContext';
+import { useState } from 'react';
+import Modal from 'react-modal';
 
 type Tprops = {
   list: IListHeader[] | undefined
-  itemChangeName: (itemId:number) => void
-  itemDel: (itemId:number) => void
+  itemChangeName: (itemId: number) => void
+  itemDel: (itemId: number) => void
 }
 
-const ListHeader = ({itemChangeName, itemDel, list }: Tprops) => {
+const ListHeader = ({ itemChangeName, itemDel, list }: Tprops) => {
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
 
   const callEditList = (idx: number) => {
 
@@ -21,17 +24,33 @@ const ListHeader = ({itemChangeName, itemDel, list }: Tprops) => {
   return <View
     className='py-2 px-2'
   >
+    <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={() => setIsOpen(false)}
+      ariaHideApp={false}
+    >
+      <button onClick={()=>setIsOpen(false)}>close</button>
+      <div>I am a modal</div>
+      <form>
+        <input />
+        <button>tab navigation</button>
+        <button>stays</button>
+        <button>inside</button>
+        <button>the modal</button>
+      </form>
+    </Modal>
+
     <View
       className={`w-70 fh-1/5 ma-h2/5 bg-green-300 px-1 text-gray-700 mx-1 my-0border-solid border-2 border-black`}
     >
       <View className="p-2" focusable={false}>
         {list?.map((l: IListHeader, i: number) => <View
-            className={`flex flex-row content-center items-center`}
+          className={`flex flex-row content-center items-center`}
           key={i}
         >
           <MenuContext
             item={l}
-            itemDel={ () => itemDel(l.id)}
+            itemDel={() => itemDel(l.id)}
             itemChangeName={() => itemChangeName(l.id)}
           />
 
@@ -43,6 +62,10 @@ const ListHeader = ({itemChangeName, itemDel, list }: Tprops) => {
             <TouchableOpacity
               style={{}}
               onPress={() => callEditList(i)}
+              // onPress={() => {
+              //   alert("xxxx")
+              //   setIsOpen(true)
+              // }}
             >
               <FontAwesomeIcon
                 size={25}
